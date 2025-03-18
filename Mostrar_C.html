@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tabla clientes</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body, html {
+                height: 100%;
+            }
+            .conteiner {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+        </style>
+    </head>
+<body>
+    <div class = "conteiner">
+        <div class = "row">
+            <div class = "col-8">
+                <h1 class="text-center">Productos:</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form action="/AgregarCarrito" method="POST">
+                            {% for Producto in Productos %}
+                            <tr>
+                                <input type="hidden" name="Id_producto" value="{{ Producto[0] }}">
+                                <th>{{ Producto[0] }}</th>
+                                <th>{{ Producto[1] }}</th>
+                                <td>{{ Producto[3] }}</td>
+                                <td><input type="number" class="form-control" id="Cantidad{{ Producto[0] }}" name="Cantidad{{ Producto[0] }}" placeholder="Cantidad Deseada"></td>
+                                <td><button type="submit" class="btn btn-primary">Agregar al Carrito</button></td>
+                            </tr>
+                        {% endfor %}
+                        </form>
+                    </tbody>
+                </table>
+            </div>
+            <div class = "col-4">
+                <h1 class="text-center">Carrito</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Item in Carrito %}
+                        <tr>
+                            <td>{{ Item["Id"] }}</td>
+                            <td>{{ Item["Cantidad"] }}</td>
+                            <td>
+                                <form action="/EliminarDeCarrito" method="POST">
+                                    <input type="hidden" name="ID" value="{{ Item[0] }}">
+                                    <button type="submit" class="btn btn-danger">Eliminar del Carrito</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: #f8f9fa; /* Fondo gris claro */
+        }
+        .container {
+            max-width: 500px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script>
+        function validation_password() { // Nombre de la función encargada de validar las contraseñas
+            var password = document.getElementById("Contraseña").value; // Se obtiene el valor del input de contraseña
+            var confirmPassword = document.getElementById("RepetirContraseña").value; // Se obtiene el valor del input de confirmación de contraseña
+            var message = document.getElementById("alertaContraseña"); // Se obtiene el div donde se mostrará la alerta
+            var submitButton = document.getElementById("Añadir"); // Se obtiene el botón de registro
+    
+            if (password === "" || confirmPassword === "") { // Verifica si los campos están vacíos
+                message.style.display = "none"; // Oculta el mensaje si no hay valores en los inputs
+                submitButton.disabled = true; // Deshabilita el botón para evitar envíos vacíos
+                return; // Detiene la ejecución de la función aquí
+            }
+    
+            message.style.display = "block"; // Muestra el mensaje de alerta cuando los campos tienen texto
+    
+            if (password !== confirmPassword) { // Compara ambas contraseñas
+                message.classList.remove("alert-success"); // Remueve la clase de éxito en caso de error
+                message.classList.add("alert-danger"); // Agrega la clase de error para mostrar el mensaje en rojo
+                message.innerText = "Las contraseñas no coinciden."; // Mensaje de error que se mostrará
+                submitButton.disabled = true; // Bloquea el botón para evitar registros incorrectos
+            } else { // Si las contraseñas coinciden
+                message.classList.remove("alert-danger"); // Remueve la alerta de error
+                message.classList.add("alert-success"); // Agrega la alerta de éxito para que se muestre en verde
+                message.innerText = "Las contraseñas coinciden."; // Mensaje de confirmación
+                submitButton.disabled = false; // Habilita el botón de registro
+            }
+        }
+    </script>
+    
+</head>
+<body>
+
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-12">
+            <div class="card px-4 py-4">
+                <h3 class="text-center mb-4">Registrar:</h3>
+                <form action="/Registrar_C" method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="Usuario" name="Usuario" placeholder="Usuario" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="Numero" name="Numero" placeholder="Número de celular" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="password" class="form-control" id="Contraseña" name="Contraseña" placeholder="Contraseña" oninput="validation_password()">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="password" class="form-control" id="RepetirContraseña" name="RepetirContraseña" placeholder="Repetir contraseña" oninput="validation_password()">
+                        </div>
+                        <div id="alertaContraseña" class="alert" style="display:none;"></div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" id="Añadir" disabled>Registrarse</button>
+                        <p class="text-end"><a href="/">Regresar</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>

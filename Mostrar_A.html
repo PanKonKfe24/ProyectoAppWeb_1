@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .form-container {
+            width: 20%;
+        }
+        .table-container {
+            width: 50%;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Primer div: Buscar y editar producto -->
+    <div class="form-container card p-3">
+        <h4 class="text-center">Buscar Producto</h4>
+        <div class="input-group">
+            <input type="text" class="form-control" id="buscarId" placeholder="Ingrese el ID del producto">
+            <button class="btn btn-primary" id="buscarBtn">Buscar</button>
+        </div>
+        <form action="/Editar" method="POST" id="editarForm" style="display:none;">
+            <input type="hidden" id="productoId" name="productoId">
+            <div class="mb-3">
+                <label for="producto" class="form-label">Producto</label>
+                <input type="text" class="form-control" id="producto" name="producto" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="existencias" class="form-label">Existencias</label>
+                <input type="number" class="form-control" id="existencias" name="existencias" required>
+            </div>
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="precio" name="precio" required>
+            </div>
+            <div class="mb-3">
+                <label for="valorTotalStock" class="form-label">Valor Total Stock</label>
+                <input type="number" class="form-control" id="valorTotalStock" name="valorTotalStock" required>
+            </div>
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <!-- Segundo div: Tabla de productos -->
+    <div class="table-container card p-3">
+        <h4 class="text-center">Todos los Productos</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Existencias</th>
+                    <th>Precio</th>
+                    <th>Valor Total Stock</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="productosTable">
+                <!-- Aquí se llenará la tabla con productos desde el servidor -->
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto['Id'] }}</td>
+                        <td>{{ producto['Producto'] }}</td>
+                        <td>{{ producto['Existencias'] }}</td>
+                        <td>{{ producto['Precio'] }}</td>
+                        <td>{{ producto['Valor_Stock'] }}</td>
+                        <td><a href="/Eliminar/{{ producto['Id'] }}" class="btn btn-danger">Eliminar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tercer div: Formulario para agregar producto -->
+    <div class="form-container card p-3">
+        <h4 class="text-center">Agregar Producto</h4>
+        <form action="/AgregarProducto" method="POST">
+            <div class="mb-3">
+                <label for="nuevoId" class="form-label">ID</label>
+                <input type="text" class="form-control" id="nuevoId" name="id" required>
+            </div>
+            <div class="mb-3">
+                <label for="nuevoProducto" class="form-label">Producto</label>
+                <input type="text" class="form-control" id="nuevoProducto" name="producto" required>
+            </div>
+            <div class="mb-3">
+                <label for="nuevasExistencias" class="form-label">Existencias</label>
+                <input type="number" class="form-control" id="nuevasExistencias" name="existencias" required>
+            </div>
+            <div class="mb-3">
+                <label for="nuevoPrecio" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="nuevoPrecio" name="precio" required>
+            </div>
+            <div class="mb-3">
+                <label for="nuevoValorTotalStock" class="form-label">Valor Total Stock</label>
+                <input type="number" class="form-control" id="nuevoValorTotalStock" name="valorTotalStock" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Producto</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Convierte el objeto productos a un formato JSON que puede ser usado en JavaScript
+    var Matriz = {{ productos|tojson }};
+
+    // Lógica para buscar un producto por ID
+    document.getElementById("buscarBtn").addEventListener("click", function() {
+        let id = document.getElementById("buscarId").value;
+
+        // Buscar el producto en la lista de productos usando el ID
+        let encontrado = Matriz.find(p => p['Id'] == id);  // Usamos p['Id'] para acceder al campo 'Id'
+
+        if (encontrado) {
+            // Rellenar los campos del formulario con los valores del producto encontrado
+            document.getElementById("productoId").value = encontrado['Id'];
+            document.getElementById("producto").value = encontrado['Producto'];
+            document.getElementById("existencias").value = encontrado['Existencias'];
+            document.getElementById("precio").value = encontrado['Precio'];
+            document.getElementById("valorTotalStock").value = encontrado['Valor_Stock'];
+
+            // Mostrar el formulario de edición
+            document.getElementById("editarForm").style.display = "block";
+        } else {
+            alert("Producto no encontrado.");
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
